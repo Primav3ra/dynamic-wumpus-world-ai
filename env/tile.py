@@ -7,10 +7,14 @@ class Tile:
         self.has_gold = False
         self.has_wumpus = False
         self.has_player = False
+        self.is_exit = False
 
         self.visited_by_player = False
         self.visible_to_agent = False
 
+    def is_safe_to_enter(self):
+        return not self.has_wumpus and not self.has_pit
+    
     def __repr__(self):
         items = []
         if self.has_pit: items.append("P")

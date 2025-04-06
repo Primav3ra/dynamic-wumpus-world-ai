@@ -6,6 +6,26 @@ from core.rewards import RewardSystem
 
 def start_game(grid_size=6, max_turns=30, num_pits=5, num_wumpus=1):
     print("🔥 Simulation starting...")
+    grid = Grid(size=grid_size)
+    grid.generate_world(num_pits=num_pits, num_wumpus=num_wumpus)
+
+    player = grid.player
+    wumpus = grid.wumpus
+
+    grid.rewards = RewardSystem()
+
+    engine = GameEngine(grid, player, wumpus, max_turns=max_turns)
+
+    while not engine.game_over:
+        print("Running next turn...")
+        engine.next_turn()
+
+
+
+
+
+'''def start_game(grid_size=6, max_turns=30, num_pits=5, num_wumpus=1):
+    print("🔥 Simulation starting...")
     # 1. Create the grid
     grid = Grid(size=grid_size)
     grid.generate_world(num_pits=num_pits, num_wumpus=num_wumpus)
@@ -21,5 +41,5 @@ def start_game(grid_size=6, max_turns=30, num_pits=5, num_wumpus=1):
     engine = GameEngine(grid, player, wumpus, max_turns=max_turns)
 
     while not engine.game_over:
-        engine.next_turn()
+        engine.next_turn()'''
 

@@ -8,9 +8,14 @@ class GameEngine:
         self.game_over = False
 
     def next_turn(self):
-        if self.game_over or self.turn >= self.max_turns:
-            print("Game Over: Max turns reached or someone died.")
-            return
+        if self.game_over:
+           print("Game Over: Simulation has already ended.")
+           return
+    
+        if self.turn >= self.max_turns:
+           print("Game Over: Max turns reached.")
+           self.game_over = True
+           return
 
         self.turn += 1
         print(f"\n--- TURN {self.turn} ---")
@@ -25,10 +30,15 @@ class GameEngine:
         self.player.take_turn(self.grid)
 
         # 2. Check if game ended after player move
-        if self.player.is_dead or self.player.has_exited:
-            self.game_over = True
-            return
-
+        if self.player.is_dead:
+           print("The Player has died!")
+           self.game_over = True
+           return
+        if self.player.has_exited:
+           print("The Player has exited the Wumpus World with glory!")
+           self.game_over = True
+           return
+        
         # 3. Wumpus makes a move (AI agent)
         self.wumpus.take_turn(self.grid, self.player)
 
@@ -49,5 +59,6 @@ class GameEngine:
 
         # Show scores
         if hasattr(self.grid, 'rewards'):
-             self.grid.rewards.print_scores(self.turn)
-
+            self.grid.rewards.update_scores(self.player, self.wumpus)
+        else:
+            print("Warning: Reward system not attached to grid.")

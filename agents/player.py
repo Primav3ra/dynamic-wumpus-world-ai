@@ -4,12 +4,13 @@ import random
 import math
 
 class Player(BaseAgent):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self, name, x=0, y=0):
+        super().__init__(name, x, y)
         self.has_gold = False
         self.has_exited = False
         self.escaped = False
         self.just_moved = False
+        self.is_dead = False
 
     def take_turn(self, grid):
         self.just_moved = False
@@ -47,6 +48,9 @@ class Player(BaseAgent):
         elif current_tile.is_exit and self.has_gold:
             print("Player exited the world with gold!")
             self.has_exited = True
+        elif current_tile.is_exit and self.has_gold:
+            self.has_exited = True
+            print("🚪 Player has exited the cave with the gold!")
 
     def _distance_to_wumpus(self, grid):
         if not hasattr(grid, 'wumpus'):

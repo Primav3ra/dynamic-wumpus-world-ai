@@ -18,6 +18,8 @@ class Wumpus(BaseAgent):
         self.just_moved = False  # Reset before moving
 
         next_move = self.plan_move_towards(player, grid)
+        self.prev_position = (self.x, self.y)
+
         if next_move:
             moved = self.move(next_move, grid)
             self.just_moved = moved  # Used by rewards.py

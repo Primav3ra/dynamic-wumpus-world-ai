@@ -11,24 +11,51 @@ class Grid:
         self.size = size
         self.grid = [[Tile(x, y) for x in range(GRID_SIZE)] for y in range(GRID_SIZE)]
         self.generate_world()
+        self.width = self.size
+        self.height = self.size
 
-    def generate_world(self):
-        all_coords = [(x, y) for x in range(self.size) for y in range(self.size) if (x, y) != (0, 0)]
-        random.shuffle(all_coords)
 
-        #1 Wumpus
-        wumpus_x, wumpus_y = all_coords.pop()
-        self.grid[wumpus_y][wumpus_x].has_wumpus = True
+    def generate_world(self, num_pits=5, num_wumpus=1):
+       from agents.player import Player
+       from agents.wumpus import Wumpus
 
-        #1 Gold
-        gold_x, gold_y = all_coords.pop()
-        self.grid[gold_y][gold_x].has_gold = True
+       all_coords = [(x, y) for x in range(self.size) for y in range(self.size) if (x, y) != (0, 0)]
+       random.shuffle(all_coords)
 
-        #4 to 6 pits
-        num_pits = random.randint(4, 6)
-        for _ in range(num_pits):
-            pit_x, pit_y = all_coords.pop()
-            self.grid[pit_y][pit_x].has_pit = True
+    # 1. Place Player at (0,0)
+       self.player = Player(name="Player", x=0, y=0)
+
+    # 2. Place Wumpus
+       w_x, w_y = all_coords.pop()
+       self.grid[w_y][w_x].has_wumpus = True
+       self.wumpus = Wumpus(name="Wumpus", x=w_x, y=w_y)
+
+    # 3. Place Gold
+       gold_x, gold_y = all_coords.pop()
+       self.grid[gold_y][gold_x].has_gold = True
+
+    # 4. Place Pits
+       for _ in range(num_pits):
+           pit_x, pit_y = all_coords.pop()
+           self.grid[pit_y][pit_x].has_pit = True
+    
+    # creating an exit tile - [7][7]
+       self.grid[7][7].is_exit = True
+
+#for grid coordinates that will be used by wumpus to find player:
+
+    def get_adjacent_coords(self, x, y):
+        width = len(self.grid[0]) #width
+        length = len(self.grid) #length
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
+        adjacent = []
+
+        for dx, dy in directions:
+           new_x, new_y = x + dx, y + dy
+           if 0 <= new_x < self.width and 0 <= new_y < self.height:
+               adjacent.append((new_x, new_y))
+
+           return adjacent
 
 
     def print_grid(self, player=None, wumpus=None):
@@ -37,7 +64,7 @@ class Grid:
         for y in range(self.size):
             row = "|"
             for x in range(self.size):
-               tile = self.tiles[y][x]
+               tile = self.grid[y][x]
                char = "."
 
             if player and player.x == x and player.y == y:
@@ -53,7 +80,28 @@ class Grid:
         print(row)
         print("+" + "---+" * self.size)
 
+#returns a list of valid tile positions the player can move to - PHASE 3
     
+    def get_valid_moves(self, x, y):
+        moves = []
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)] 
+
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < self.size and 0 <= ny < self.size:
+                if not self.grid[ny][nx].has_pit:
+                    moves.append((nx, ny))
+
+        print(f"Valid moves from ({x},{y}): {moves}")
+        return moves
+    
+ #this is for player.py in take_turn() 
+   
+    def get_tile(self, x, y):
+       if 0 <= x < self.size and 0 <= y < self.size:
+           return self.grid[y][x]
+       return None
+
 
 #plugging in perception into the grid next so these agents can start thinking.
 #method that scans adjacent tiles to generate Perception for any agent.
@@ -95,6 +143,15 @@ class Grid:
             scream=scream,
             sees_player=sees_player
         )
+    
+    def update_perceptions(self):
+        for y in range(self.size):
+            for x in range(self.size):
+               p = self.get_perception(x, y)
+               tile = self.grid[y][x]
+               tile.has_stench = p.stench
+               tile.has_breeze = p.breeze
+               tile.has_glitter = p.glitter
 
 
 #THE OLD CODE 
