@@ -1,0 +1,12 @@
+name: wumpus-world
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - numpy
+  - pip
+  - pip:
+      - gymnasium
+      - pygame
+      - stable-baselines3
