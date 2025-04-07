@@ -48,8 +48,9 @@ class Player(BaseAgent):
                     print("❌ Invalid move. That tile is not allowed.")
             else:
                 print("❌ Invalid key. Use W/A/S/D only.")
-        else:
-             move = random.choice(moves)
+        
+        if not self.manual_mode:
+            move = random.choice(moves)
             
         if key.startswith('f') and self.has_arrow:
                 dir_key = key[1:]

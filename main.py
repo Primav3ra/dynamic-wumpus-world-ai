@@ -1,13 +1,21 @@
 import argparse
 from core.game import start_game
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Start the Wumpus World Simulation")
-    parser.add_argument("--manual", action="store_true", help="Enable manual control for the player")
-    args = parser.parse_args()
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Dynamic Wumpus World AI")
+    parser.add_argument(
+        '--manual',
+        action='store_true',
+        help='Enable manual mode for user-controlled player.'
+    )
+    return parser.parse_args()
 
-    # Pass it to the game
-    start_game(manual_player=args.manual)
+if __name__ == "__main__":
+    args = parse_arguments()
+    manual_mode = args.manual
+    print(f"[DEBUG] Player manual_mode set to {manual_mode}")
+
+    start_game()
 
 
 

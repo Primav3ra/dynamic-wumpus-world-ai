@@ -4,7 +4,7 @@ from agents.wumpus import Wumpus
 from core.engine import GameEngine
 from core.rewards import RewardSystem
 
-def start_game(grid_size=6, max_turns=30, num_pits=5, num_wumpus=1, manual_player=False):
+def start_game(grid_size=8, max_turns=30, num_pits=2, num_wumpus=1, manual_player=False):
     print("🔥 Simulation starting...")
     
     grid = Grid(size=grid_size)
