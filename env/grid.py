@@ -2,6 +2,7 @@
 import random
 from env.tile import Tile
 from .perception import Perception
+from agents.player import Player
 
 GRID_SIZE = 8
 PIT_PROBABILITY = 0.15
@@ -15,7 +16,7 @@ class Grid:
         self.height = self.size
 
 
-    def generate_world(self, num_pits=5, num_wumpus=1):
+    def generate_world(self, num_pits=5, num_wumpus=1, manual_mode=False):
        from agents.player import Player
        from agents.wumpus import Wumpus
 
@@ -23,7 +24,8 @@ class Grid:
        random.shuffle(all_coords)
 
     # 1. Place Player at (0,0)
-       self.player = Player(name="Player", x=0, y=0)
+       print(f"Using Player from: {Player.__module__}")
+       self.player = Player(name="Player", x=0, y=0, manual_mode=manual_mode)
 
     # 2. Place Wumpus
        w_x, w_y = all_coords.pop()

@@ -4,12 +4,15 @@ from agents.wumpus import Wumpus
 from core.engine import GameEngine
 from core.rewards import RewardSystem
 
-def start_game(grid_size=6, max_turns=30, num_pits=5, num_wumpus=1):
+def start_game(grid_size=6, max_turns=30, num_pits=5, num_wumpus=1, manual_player=False):
     print("🔥 Simulation starting...")
+    
     grid = Grid(size=grid_size)
-    grid.generate_world(num_pits=num_pits, num_wumpus=num_wumpus)
-
+    grid.generate_world(num_pits=num_pits, num_wumpus=num_wumpus, manual_mode=manual_player)
+    
+    player = Player(name="Player", x=0, y=0, manual_mode=manual_player)
     player = grid.player
+
     wumpus = grid.wumpus
 
     grid.rewards = RewardSystem()

@@ -1,9 +1,13 @@
+import argparse
 from core.game import start_game
 
 if __name__ == "__main__":
-    start_game()
+    parser = argparse.ArgumentParser(description="Start the Wumpus World Simulation")
+    parser.add_argument("--manual", action="store_true", help="Enable manual control for the player")
+    args = parser.parse_args()
 
-
+    # Pass it to the game
+    start_game(manual_player=args.manual)
 
 
 
