@@ -7,6 +7,7 @@ class Wumpus:
         self.x = x
         self.y = y
         self.reward = 0
+        self.is_dead = False
 
     def take_turn(self, grid, player):
         current_distance = abs(self.x - player.x) + abs(self.y - player.y)
@@ -34,7 +35,10 @@ class Wumpus:
                 elif new_distance > current_distance:
                     self.reward -= 1
                 print(f"🎯 Wumpus Reward: {self.reward}")
-
+        
+        if self.is_dead:
+            return  # Wumpus is dead and doesn't move
+        
     def plan_move_towards(self, player, grid):
         path = self.bfs_to_player(grid, player)
         if path and len(path) > 1:

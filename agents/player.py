@@ -13,6 +13,8 @@ class Player(BaseAgent):
         self.escaped = False
         self.just_moved = False
         self.is_dead = False
+        self.has_arrow = True
+        self.killed_wumpus = False
 
     def take_turn(self, grid):
         self.just_moved = False
@@ -32,10 +34,11 @@ class Player(BaseAgent):
         key_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
         move = None
         while move is None:
-            key = input("Your move (W/A/S/D or Q to Quit): ").lower()
+            key = input("Your move (W/A/S/D or Q to Quit & F+(WASD) to shoot): ").lower()
             if key == 'q':
                 print("👋 Goodbye, adventurer.")
                 exit()
+            
             if key in key_map:
                 dx, dy = key_map[key]
                 new_pos = (self.x + dx, self.y + dy)
@@ -46,7 +49,25 @@ class Player(BaseAgent):
             else:
                 print("❌ Invalid key. Use W/A/S/D only.")
         else:
-            move = random.choice(moves) # Choose a move randomly (replace with RL policy if needed)
+             move = random.choice(moves)
+            
+        if key.startswith('f') and self.has_arrow:
+                dir_key = key[1:]
+                if dir_key in key_map:
+                 dx, dy = key_map[dir_key]
+                 target_x = self.x + dx
+                 target_y = self.y + dy
+                 if (target_x, target_y) == (grid.wumpus.x, grid.wumpus.y):
+                    print("🏹 You fired an arrow and HIT the Wumpus! It’s dead!")
+                    self.killed_wumpus = True
+                    self.has_arrow = False
+                    grid.wumpus.is_dead = True
+                 else:
+                    print("🏹 You fired an arrow but missed...")
+                    self.has_arrow = False
+                return
+                        
+ # Choose a move randomly (replace with RL policy if needed)
         
         old_distance = self._distance_to_wumpus(grid)
 
