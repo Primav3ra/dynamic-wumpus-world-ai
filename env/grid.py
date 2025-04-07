@@ -59,26 +59,28 @@ class Grid:
 
 
     def print_grid(self, player=None, wumpus=None):
-        print("\nWumpus World:")
-        print("+" + "---+" * self.size)
-        for y in range(self.size):
-            row = "|"
-            for x in range(self.size):
-               tile = self.grid[y][x]
-               char = "."
+       print("\nWumpus World:")
+       print("+" + "----+" * self.size)
+       for y in range(self.size):
+         row = "|"
+         for x in range(self.size):
+            tile = self.grid[y][x]
 
             if player and player.x == x and player.y == y:
-                char = "P"
+                char = "🧍"   # Player
             elif wumpus and wumpus.x == x and wumpus.y == y:
-                char = "W"
+                char = "👹"   # Wumpus
             elif tile.has_gold:
-                char = "G"
+                char = "💰"   # Gold
             elif tile.has_pit:
-                char = "O"
+                char = "🕳️"   # Pit
+            else:
+                char = "⬜"   # Empty tile
 
             row += f" {char} |"
-        print(row)
-        print("+" + "---+" * self.size)
+         print(row)
+         print("+" + "----+" * self.size)
+
 
 #returns a list of valid tile positions the player can move to - PHASE 3
     
@@ -154,9 +156,31 @@ class Grid:
                tile.has_glitter = p.glitter
 
 
+#experimental 
+'''
+    def print_full_grid(self):
+       print("\nWumpus World (Full View):")
+       for y in range(self.size):
+        row = ""
+        for x in range(self.size):
+            cell = self.grid[y][x]
+            if cell.has_player:
+                row += " 🧍 "
+            elif cell.has_wumpus:
+                row += " 👹 "
+            elif cell.has_gold:
+                row += " 💰 "
+            elif cell.has_pit:
+                row += " 🕳️ "
+            else:
+                row += " . "
+        print(row)
+'''
+
+
 #THE OLD CODE 
 
-    '''   self.place_pits()
+'''   self.place_pits()
         self.place_gold()
         self.place_wumpus()
         self.place_player() 
