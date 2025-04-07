@@ -4,8 +4,10 @@ import random
 import math
 
 class Player(BaseAgent):
-    def __init__(self, name, x=0, y=0):
+    def __init__(self, name, x=0, y=0, manual_mode=False):
+        print(f"[DEBUG] Player manual_mode set to {manual_mode}")
         super().__init__(name, x, y)
+        self.manual_mode=manual_mode
         self.has_gold = False
         self.has_exited = False
         self.escaped = False
@@ -21,9 +23,31 @@ class Player(BaseAgent):
         if not moves:
             print("Player is stuck!")
             return
+        
+        if self.manual_mode:
+            print("\n🕹️ Manual Mode: Choose your move.")
+            print(f"Valid moves from ({self.x}, {self.y}): {moves}")
+            print("Use WASD keys to move (W=up, S=down, A=left, D=right)")
 
-        # Choose a move randomly (replace with RL policy if needed)
-        move = random.choice(moves)
+        key_map = {'w': (-1, 0), 's': (1, 0), 'a': (0, -1), 'd': (0, 1)}
+        move = None
+        while move is None:
+            key = input("Your move (W/A/S/D or Q to Quit): ").lower()
+            if key == 'q':
+                print("👋 Goodbye, adventurer.")
+                exit()
+            if key in key_map:
+                dx, dy = key_map[key]
+                new_pos = (self.x + dx, self.y + dy)
+                if new_pos in moves:
+                    move = new_pos
+                else:
+                    print("❌ Invalid move. That tile is not allowed.")
+            else:
+                print("❌ Invalid key. Use W/A/S/D only.")
+        else:
+            move = random.choice(moves) # Choose a move randomly (replace with RL policy if needed)
+        
         old_distance = self._distance_to_wumpus(grid)
 
         self.x, self.y = move
