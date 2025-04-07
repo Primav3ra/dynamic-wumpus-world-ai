@@ -4,7 +4,7 @@ from env.tile import Tile
 from .perception import Perception
 
 GRID_SIZE = 8
-PIT_PROBABILITY = 0.2
+PIT_PROBABILITY = 0.15
 
 class Grid:
     def __init__(self, size=8):
